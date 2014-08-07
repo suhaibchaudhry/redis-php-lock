@@ -12,7 +12,7 @@ if(!empty($_GET['ticket_id']) && !empty($_GET['register_id']) && !empty($_GET['o
 
 	if($op == 'acquire' || $op == 'renew') {
 		$nx = $r->setnx($key, $user);
-		if ($nx || ($op == 'renew' && $r->get($key) == $user)) {
+		if ($nx || ($op == 'renew' && $r->get($key) == $user) || ($op == 'acquire' && $r->get($key) == $user)) {
 			// Because system can crash, give him 5 min.
 			$r->expire($key, 60 * 3);
 			echo json_encode(array("status" => true, "message" => "Ticket lock acquired."));
